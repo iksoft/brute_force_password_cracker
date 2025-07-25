@@ -3,6 +3,7 @@ import hashlib
 import sys
 import time
 import os
+import string
 
 # ANSI color codes for green and red
 GREEN = '\033[92m'
@@ -74,9 +75,41 @@ def interactive_menu():
         except ValueError:
             print(f"{RED}Invalid input. Enter a number.{RESET}")
     target_hash = input(f"{CYAN}Paste the hash to crack: {RESET}").strip()
-    charset = input(f"{CYAN}Enter charset (default: abcdefghijklmnopqrstuvwxyz): {RESET}").strip()
-    if not charset:
-        charset = 'abcdefghijklmnopqrstuvwxyz'
+    print(f"{CYAN}Select charset option:{RESET}")
+    print(f"  1. Lowercase letters (a-z)")
+    print(f"  2. Lowercase + digits (a-z0-9)")
+    print(f"  3. All letters (a-zA-Z)")
+    print(f"  4. All letters + digits (a-zA-Z0-9)")
+    print(f"  5. All printable (letters, digits, symbols)")
+    print(f"  6. Custom charset")
+    while True:
+        try:
+            cs_choice = int(input(f"{CYAN}Enter choice [1-6]: {RESET}"))
+            if cs_choice == 1:
+                charset = string.ascii_lowercase
+                break
+            elif cs_choice == 2:
+                charset = string.ascii_lowercase + string.digits
+                break
+            elif cs_choice == 3:
+                charset = string.ascii_letters
+                break
+            elif cs_choice == 4:
+                charset = string.ascii_letters + string.digits
+                break
+            elif cs_choice == 5:
+                charset = string.printable.strip()
+                break
+            elif cs_choice == 6:
+                charset = input(f"{CYAN}Enter custom charset: {RESET}").strip()
+                if charset:
+                    break
+                else:
+                    print(f"{RED}Charset cannot be empty. Try again.{RESET}")
+            else:
+                print(f"{RED}Invalid choice. Try again.{RESET}")
+        except ValueError:
+            print(f"{RED}Invalid input. Enter a number.{RESET}")
     try:
         min_len = int(input(f"{CYAN}Minimum password length (default: 1): {RESET}") or 1)
         max_len = int(input(f"{CYAN}Maximum password length (default: 5): {RESET}") or 5)
